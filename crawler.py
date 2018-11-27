@@ -8,29 +8,18 @@ import time
 import re
 import urllib.request as ur
 import requests
-from lyrics import lyrics
 from itertools import cycle
 
-#proxies = {'https': '93.80.26.110'}
 
-azUrl = "https://www.azlyrics.com/"
-#chance = "https://www.azlyrics.com/c/chancetherapper.html"
+lolUrl = "http://gol.gg/teams/list/season-S8/split-Summer/region-NA/tournament-ALL/week-ALL/"
 dots = '..'
-#testList = ["chancetherapper", "kyle", "kidsseeghost", "dirty heads"]
 
+def getTeams():
+    result = requests.get(lolUrl)
+    soup = bs(result.content, "html.parser")
 
-proxies = ['192.69.245.61', '47.75.55.246', '47.75.62.90', '35.236.82.108']
-proxyCycle = cycle(proxies)
-
-
-def getArtistUrl(artist):
-    temp = artist.lower()
-    temp = temp.replace(" ","")
-    artistUrl = azUrl + temp[0] + "/" + temp + ".html"
-    return artistUrl
 
 def getLyrics(artist,lyric):
-    artistUrl = getArtistUrl(artist)
     result = requests.get(artistUrl)
     soup = bs(result.content, "html.parser")
 
