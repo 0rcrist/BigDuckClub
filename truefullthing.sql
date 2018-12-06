@@ -117,14 +117,15 @@ CREATE TABLE IF NOT EXISTS `mydb`.`user` (
   `currentBet` INT(11) NULL DEFAULT NULL,
   `admin` TINYINT(4) NOT NULL DEFAULT '0',
   `amount` INT(11) NULL DEFAULT NULL,
+  `teamBet` VARCHAR(45) NULL DEFAULT NULL,
   PRIMARY KEY (`Id`),
   UNIQUE INDEX `Id_UNIQUE` (`Id` ASC) ,
   INDEX `Bet_idx` (`currentBet` ASC) ,
   CONSTRAINT `Bet`
     FOREIGN KEY (`currentBet`)
     REFERENCES `mydb`.`match` (`idMatch`)
-    ON DELETE SET NULL
-    ON UPDATE CASCADE)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
@@ -133,14 +134,14 @@ USE `mydb` ;
 -- -----------------------------------------------------
 -- Placeholder table for view `mydb`.`bets`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`bets` (`Id` INT, `IdMatch` INT, `points` INT);
+CREATE TABLE IF NOT EXISTS `mydb`.`bets` (`Id` INT, `IdMatch` INT, `amount` INT, `teamBet` INT);
 
 -- -----------------------------------------------------
 -- View `mydb`.`bets`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `mydb`.`bets`;
 USE `mydb`;
-CREATE  OR REPLACE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `mydb`.`bets` AS select `mydb`.`user`.`Id` AS `Id`,`mydb`.`match`.`idMatch` AS `IdMatch`,`mydb`.`user`.`points` AS `points` from (`mydb`.`user` join `mydb`.`match`) where (`mydb`.`user`.`currentBet` = `mydb`.`match`.`idMatch`);
+CREATE  OR REPLACE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `mydb`.`bets` AS select `mydb`.`user`.`Id` AS `Id`,`mydb`.`match`.`idMatch` AS `IdMatch`,`mydb`.`user`.`amount` AS `amount`,`mydb`.`user`.`teamBet` AS `teamBet` from (`mydb`.`user` join `mydb`.`match`) where (`mydb`.`user`.`currentBet` = `mydb`.`match`.`idMatch`);
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
@@ -595,4 +596,3 @@ INSERT INTO mydb.match(idMatch, teamA, teamB, happend, tournament) values
 (2020104, "LA Gladiators",   "Shanghai Dragons", 0, "2018 BigDuck Championship"),
 (2020105, "NY Excelsior",    "Shanghai Dragons", 0, "2018 BigDuck Championship"),
 (2020106, "Houston Outlaws", "London Spitfire",  0, "2018 BigDuck Championship");
-
